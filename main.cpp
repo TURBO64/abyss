@@ -29,9 +29,6 @@ int main() {
   getline(std::cin, name);
   if(name.empty()) name = "No-Name";
 
-  // init world
-  World world;
-
   // init player
   Player player(name, '@', GREEN);
 
@@ -41,27 +38,29 @@ int main() {
   player.y = MAP_HEIGHT / 2;
   player.x = MAP_WIDTH / 2;
 
+  // init world
+  World world;
+
   // load starting map
   Map currentmap = world.worldArray[player.worldY][player.worldX];
 
   // init screen
   Screen scr;
 
-  // begin main loop
+  // begin main loop //////////////////////////////////////////////////////////
   while(!gameOver) {
-
-    // check if player has exited
+    // check if player has won
     if(player.worldY == 0 and player.worldX == 8) {
       gameOver = true;
       gameWin = true;
       break;
     }
 
-    // monster iterator
-    std::vector<Monster>::iterator mob;
-
     // load current map
     currentmap = world.worldArray[player.worldY][player.worldX];
+
+    // monster iterator
+    std::vector<Monster>::iterator mob;
 
     // move mobs
     for(mob = currentmap.mobs.begin(); mob < currentmap.mobs.end(); mob++) {
@@ -84,7 +83,7 @@ int main() {
     player.draw(scr);
 
     // player name
-    mvprintw(0, 41, "%s the Unworthy", player.name.c_str());
+    mvprintw(0, 41, "%s the Unworthy", player.getName());
 
     // debug info
     mvprintw(2, 41, "Turn: %d", gameTurn);
@@ -100,12 +99,12 @@ int main() {
       i++;
     }
 
-    // handle input
+    // get input
     input = getch();
 
+    // key bindings
     switch(input) {
-
-      // movement keys
+      // movement
       case 'h': // left
         if(player.mv(0, -1, currentmap) ) gameTurn++;
         else continue;
@@ -148,10 +147,8 @@ int main() {
       default:
         continue;
     }
-    // end of input handler
-
   }
-  // end of main loop
+  // end main loop ////////////////////////////////////////////////////////////
 
   if(gameWin) {
     scr.cls();

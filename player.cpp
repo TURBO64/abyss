@@ -18,30 +18,30 @@ void Player::draw(Screen &scr) {
 }
 
 bool Player::mv(int dy, int dx, Map &currentmap) {
+  // set direction
   this->dx = dx;
   this->dy = dy;
+
   // predict new position
   int newx = this->x + this->dx;
   int newy = this->y + this->dy;
 
-  // move to next area
-
-  // move east
+  // move east in world
   if(newx == MAP_WIDTH) {
     this->worldX++;
     this->x = 0;
   }
-  // move west
+  // move west in world
   if(newx == -1) {
     this->worldX--;
     this->x = MAP_WIDTH - 1;
   }
-  // move north
+  // move north in world
   if(newy == -1) {
     this->worldY--;
     this->y = MAP_HEIGHT - 1;
   }
-  // move south
+  // move south in world
   if(newy == MAP_HEIGHT) {
     this->worldY++;
     this->y = 0;
@@ -52,16 +52,16 @@ bool Player::mv(int dy, int dx, Map &currentmap) {
       newx >= 0 and
       newx < MAP_WIDTH and
       newy < MAP_HEIGHT and
-      currentmap.mapArray[newy][newx].passable == true ) {
+      currentmap.mapArray[newy][newx].passable) {
         // move character to new position
         this->y = newy;
         this->x = newx;
-        return true;
+        return true; // move success
   }
-
-  return false;
+  return false; // move failed
 }
 
 const char * Player::getName() {
+  // convert player name to c-string for curses printing
   return this->name.c_str();
 }

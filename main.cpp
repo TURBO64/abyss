@@ -12,7 +12,7 @@
 
 int main() {
 
-  // seed rand
+  // seed randll
   srand(time(NULL));
 
   // gamestates
@@ -82,8 +82,13 @@ int main() {
     // draw player
     player.draw(scr);
 
-    // player name
-    mvprintw(0, 41, "%s the Unworthy", player.getName());
+    // player name and title
+    if(player.lvl == 1) player.title = "Unworthy";
+    if(player.lvl == 2) player.title = "Mediocre";
+    if(player.lvl == 3) player.title = "Adept";
+    if(player.lvl == 4) player.title = "Ruthless";
+    if(player.lvl == 5) player.title = "Unstoppable";
+    mvprintw(0, 41, "%s the %s", player.name.c_str(), player.title.c_str());
 
     // debug info
     mvprintw(2, 41, "Turn: %d", gameTurn);

@@ -8,7 +8,6 @@
 #include <ctime>
 #include <cstdlib>
 
-
 // global map constants
 const int MAP_WIDTH = 40;
 const int MAP_HEIGHT = 18;

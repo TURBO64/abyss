@@ -60,8 +60,3 @@ bool Player::mv(int dy, int dx, Map &currentmap) {
   }
   return false; // move failed
 }
-
-const char * Player::getName() {
-  // convert player name to c-string for curses printing
-  return this->name.c_str();
-}

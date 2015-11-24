@@ -12,6 +12,8 @@ class Player {
     int color;
   public:
     std::string name;
+    std::string title;
+    int lvl = 1;
     int x, y;
     int dx, dy = 0;
     int worldX, worldY;
@@ -19,7 +21,6 @@ class Player {
     ~Player();
     void draw(Screen &scr);
     bool mv(int dy, int dx, Map &currentmap);
-    const char * getName();
 };
 
 #endif

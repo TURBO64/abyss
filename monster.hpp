@@ -1,9 +1,10 @@
 #ifndef MONSTER_HPP
 #define MONSTER_HPP
 
+#include "screen.hpp"
+
 #include <string>
 #include <vector>
-#include "screen.hpp"
 
 class Monster {
   private:

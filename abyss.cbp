@@ -28,8 +28,6 @@
 			<Add option="-lpdcurses" />
 			<Add directory="lib" />
 		</Linker>
-		<Unit filename="game.cpp" />
-		<Unit filename="game.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.hpp" />

@@ -1,9 +1,10 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <string>
 #include "screen.hpp"
 #include "map.hpp"
+
+#include <string>
 
 class Player {
   private:

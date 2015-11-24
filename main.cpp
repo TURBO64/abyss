@@ -1,5 +1,4 @@
 #include "screen.hpp"
-#include "game.hpp"
 #include "map.hpp"
 #include "player.hpp"
 #include "monster.hpp"

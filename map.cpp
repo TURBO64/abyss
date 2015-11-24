@@ -1,6 +1,4 @@
 #include "map.hpp"
-#include <ctime>
-#include <cstdlib>
 
 Map::Map(int mapType) {
 

@@ -3,6 +3,7 @@
 
 #include "screen.hpp"
 #include "monster.hpp"
+
 #include <vector>
 #include <ctime>
 #include <cstdlib>

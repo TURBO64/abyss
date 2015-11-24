@@ -1,12 +1,12 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
+#include "map.hpp"
+#include "monster.hpp"
+
 #include <vector>
 #include <ctime>
 #include <cstdlib>
-
-#include "map.hpp"
-#include "monster.hpp"
 
 const int WORLD_HEIGHT = 8;
 const int WORLD_WIDTH = 8;

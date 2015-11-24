@@ -7,10 +7,10 @@
 
 class Player {
   private:
-    std::string name;
     char glyph;
     int color;
   public:
+    std::string name;
     int x, y;
     int dx, dy = 0;
     int worldX, worldY;

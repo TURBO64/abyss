@@ -24,9 +24,9 @@ class World {
       {MAP_IN, MAP_NW, MAP_XX, MAP_XX, MAP_NE, MAP_EW, MAP_NW, MAP_XX}
     };
     std::vector<Monster> mobIndex = {
-      Monster("rat", 'r', BROWN),
-      Monster("spider", 'x', DARKGREY),
-      Monster("snake", 's', GREEN)
+      Monster("Rat", 'r', BROWN),
+      Monster("Spider", 'x', DARKGREY),
+      Monster("Snake", 's', GREEN)
     };
     World();
     ~World();

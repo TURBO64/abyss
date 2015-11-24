@@ -4,15 +4,15 @@
 
 Map::Map(int mapType) {
 
-  // set mapType
-  this->mapType = mapType;
-
   // tile definitions (glyph, color, passable)
   Tile tile_floor = {'.', CYAN, true};
   Tile tile_wall  = {'#', DARKGREY, false};
   Tile tile_water = {'~', BLUE, true};
   Tile tile_stalagmite = {'^', CYAN, false};
   Tile tile_light = {'.', LIGHTCYAN, true};
+
+  // set mapType
+  this->mapType = mapType;
 
   // generate cave
   this->rect(0, 0, MAP_HEIGHT, MAP_WIDTH, tile_wall); // walls first

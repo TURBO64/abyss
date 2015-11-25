@@ -10,14 +10,15 @@
 #include <iostream>
 #include <string>
 
-int main() {
+void moveMobs(Map *currentmap, Player &p);
+void movePlayer(int dy, int dx, Player &player, Map *currentmap);
 
-  // seed randll
+int main() {
+  // seed rand
   srand(time(NULL));
 
   // gamestates
   bool gameOver = false;
-  bool gameWin = false;
   int gameTurn = 0;
 
   // input handler
@@ -41,41 +42,36 @@ int main() {
   // init world
   World world;
 
-  // load starting map
-  Map currentmap = world.worldArray[player.worldY][player.worldX];
+  // create currentmap pointer
+  Map * currentmap;
+  currentmap = &world.worldArray[player.worldY][player.worldX];
 
   // init screen
   Screen scr;
 
   // begin main loop //////////////////////////////////////////////////////////
   while(!gameOver) {
-    // check if player has won
-    if(player.worldY == 0 and player.worldX == 8) {
-      gameOver = true;
-      gameWin = true;
-      break;
-    }
-
     // load current map
-    currentmap = world.worldArray[player.worldY][player.worldX];
-
-    // monster iterator
-    std::vector<Monster>::iterator mob;
+    currentmap = &world.worldArray[player.worldY][player.worldX];
 
     // move mobs
-    for(mob = currentmap.mobs.begin(); mob < currentmap.mobs.end(); mob++) {
-      mob->y = mob->y + 1;
-      mob->x = mob->x + 1;
+    moveMobs(currentmap, player);
+
+    // check if player is dead
+    if(player.hp < 1) {
+      gameOver = true;
+      break;
     }
 
     // refresh
     scr.cls();
 
     // draw map
-    currentmap.draw(scr);
+    currentmap->draw(scr);
 
     // draw mobs
-    for(mob = currentmap.mobs.begin(); mob < currentmap.mobs.end(); mob++) {
+    std::vector<Monster>::iterator mob;
+    for(mob = currentmap->mobs.begin(); mob < currentmap->mobs.end(); mob++) {
       mob->draw(scr);
     }
 
@@ -89,18 +85,17 @@ int main() {
     if(player.lvl == 4) player.title = "Ruthless";
     if(player.lvl == 5) player.title = "Unstoppable";
     mvprintw(0, 41, "%s the %s", player.name.c_str(), player.title.c_str());
+    mvprintw(1, 41, "Player HP: %d", player.hp);
 
     // debug info
     mvprintw(2, 41, "Turn: %d", gameTurn);
     mvprintw(3, 41, "Player coords: %d, %d", player.x, player.y);
     mvprintw(4, 41, "World coords: %d, %d", player.worldX, player.worldY);
-    mvprintw(19, 0, "Use hjkl to move left, down, up, right.");
-    mvprintw(20, 0, "Use yubn to move diagonally.");
 
     // mob coords
     int i = 0;
-    for(mob = currentmap.mobs.begin(); mob < currentmap.mobs.end(); mob++) {
-      mvprintw(6 + i, 41, "%s coords: %d, %d", mob->getName(), mob->x, mob->y);
+    for(mob = currentmap->mobs.begin(); mob < currentmap->mobs.end(); mob++) {
+      mvprintw(6 + i, 41, "%s coords: %d, %d, HP: %d", mob->getName(), mob->x, mob->y, mob->hp);
       i++;
     }
 
@@ -111,36 +106,28 @@ int main() {
     switch(input) {
       // movement
       case 'h': // left
-        if(player.mv(0, -1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(0, -1, player, currentmap);
         break;
       case 'j': // down
-        if(player.mv(1, 0, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(1, 0, player, currentmap);
         break;
       case 'k': // up
-        if(player.mv(-1, 0, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(-1, 0, player, currentmap);
         break;
       case 'l': // right
-        if(player.mv(0, 1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(0, 1, player, currentmap);
         break;
       case 'y': // up-left
-        if(player.mv(-1, -1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(-1, -1, player, currentmap);
         break;
       case 'u': // up-right
-        if(player.mv(-1, 1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(-1, 1, player, currentmap);
         break;
       case 'b': // down-left
-        if(player.mv(1, -1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(1, -1, player, currentmap);
         break;
       case 'n': // down-right
-        if(player.mv(1, 1, currentmap) ) gameTurn++;
-        else continue;
+        movePlayer(1, 1, player, currentmap);
         break;
 
       // game commands
@@ -152,15 +139,117 @@ int main() {
       default:
         continue;
     }
+
+    // check if player has won
+    if(player.worldY == 0 and player.worldX == 8) {
+      gameOver = true;
+      break;
+    }
+
+    // add turn
+    gameTurn++;
   }
   // end main loop ////////////////////////////////////////////////////////////
 
-  if(gameWin) {
-    scr.cls();
-    mvprintw(12, 36, "You win!");
-    getch();
-  }
-
   // end game
   return 0;
+}
+
+void moveMobs(Map *currentmap, Player &player) {
+  std::vector<Monster>::iterator mob;
+  for(mob = currentmap->mobs.begin(); mob < currentmap->mobs.end(); mob++) {
+    int dy = 0, dx = 0;
+    int newx = 0, newy = 0;
+    int ydistance = 0, xdistance = 0;
+
+    // calculate distance from player to mob
+    if(player.y < mob->y) ydistance = mob->y - player.y;
+    else ydistance = player.y - mob->y;
+    if(player.x < mob->x) xdistance = mob->x - player.x;
+    else xdistance = player.x - mob->x;
+
+    // follow player
+    if(ydistance <= 8 and xdistance <= 8) {
+      if(mob->y > player.y) dy = -1;
+      if(mob->y < player.y) dy = 1;
+      if(mob->x > player.x) dx = -1;
+      if(mob->x < player.x) dx = 1;
+    }
+
+    // new mob position
+    newx = mob->x + dx;
+    newy = mob->y + dy;
+
+    // move mob
+    if(currentmap->isFree(newy, newx)) {
+      if(newx != player.x or newy != player.y) {
+        mob->x = newx;
+        mob->y = newy;
+      }
+      // attack player
+      else {
+        player.hp--;
+      }
+    }
+  }
+}
+
+void movePlayer(int dy, int dx, Player &player, Map *currentmap) {
+  // predict new position
+  int newx = player.x + dx;
+  int newy = player.y + dy;
+
+  // move east in world
+  if(newx == MAP_WIDTH) {
+    player.worldX++;
+    player.x = 0;
+  }
+  // move west in world
+  if(newx == -1) {
+    player.worldX--;
+    player.x = MAP_WIDTH - 1;
+  }
+  // move north in world
+  if(newy == -1) {
+    player.worldY--;
+    player.y = MAP_HEIGHT - 1;
+  }
+  // move south in world
+  if(newy == MAP_HEIGHT) {
+    player.worldY++;
+    player.y = 0;
+  }
+
+  // collision detection/combat
+  bool blocked = false;
+
+  // check for terrain block
+  if(!currentmap->isFree(newy, newx)) blocked = true;
+
+  // check for mob collisions
+  std::vector<Monster>::iterator mob;
+  for(mob = currentmap->mobs.begin(); mob < currentmap->mobs.end(); mob++) {
+    if(newx == mob->x and newy == mob->y) {
+      blocked = true;
+
+      // hit monster
+      int hitChance = rand() % 2; // chance to hit/miss
+      if(hitChance == 1) {
+        mob->hp -= player.atk;
+
+        // kill monster
+        if(mob->hp < 1) {
+          currentmap->mobs.erase(mob);
+
+          // blood and guts
+          currentmap->mapArray[newy][newx] = currentmap->tile_blood;
+        }
+        break;
+      }
+    }
+  }
+  if(!blocked) {
+    player.y = newy;
+    player.x = newx;
+  }
 }

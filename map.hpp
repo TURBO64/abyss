@@ -39,6 +39,15 @@ class Map {
     Map(int mapType);
     ~Map();
     void draw(Screen &scr);
+    bool isFree(int y, int x);
+    bool noMob(int y, int x, int atk);
+    // tile definitions (glyph, color, passable)
+    Tile tile_floor = {'.', CYAN, true};
+    Tile tile_wall  = {'#', DARKGREY, false};
+    Tile tile_water = {'~', BLUE, true};
+    Tile tile_stalagmite = {'^', CYAN, false};
+    Tile tile_light = {'.', LIGHTCYAN, true};
+    Tile tile_blood = {'.', RED, true};
 };
 
 #endif

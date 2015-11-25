@@ -13,14 +13,14 @@ class Player {
   public:
     std::string name;
     std::string title;
+    int hp = 50;
     int lvl = 1;
     int x, y;
-    int dx, dy = 0;
+    int atk = lvl * 3;
     int worldX, worldY;
     Player(std::string name, char glyph, int color);
     ~Player();
     void draw(Screen &scr);
-    bool mv(int dy, int dx, Map &currentmap);
 };
 
 #endif

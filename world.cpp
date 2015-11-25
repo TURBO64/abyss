@@ -12,7 +12,7 @@ World::World() {
           // select random mob
           int r = rand() % this->mobIndex.size();
           Monster mob = this->mobIndex[r];
-          // put mob on random spot
+          // randomize mob positions
           mob.y = 5 + rand() % (MAP_HEIGHT - 10);
           mob.x = 5 + rand() % (MAP_WIDTH - 10);
           // add mob to map's mob vector

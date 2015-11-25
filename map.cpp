@@ -2,13 +2,6 @@
 
 Map::Map(int mapType) {
 
-  // tile definitions (glyph, color, passable)
-  Tile tile_floor = {'.', CYAN, true};
-  Tile tile_wall  = {'#', DARKGREY, false};
-  Tile tile_water = {'~', BLUE, true};
-  Tile tile_stalagmite = {'^', CYAN, false};
-  Tile tile_light = {'.', LIGHTCYAN, true};
-
   // set mapType
   this->mapType = mapType;
 
@@ -108,4 +101,38 @@ void Map::brush(int y, int x, Tile tile) {
   this->rect(y - 1, x + 1, 1, 3, tile);
   this->rect(y, x, 2, 5, tile);
   this->rect(y + 2, x + 1, 1, 3, tile);
+}
+
+bool Map::isFree(int y, int x) {
+  bool blocked = false;
+  // check for edge of map
+  if(x > MAP_WIDTH or x < 0 or y > MAP_HEIGHT or y < 0) blocked = true;
+
+  // check for blocking terrain
+  if(!this->mapArray[y][x].passable) {
+    blocked = true;
+  }
+  // check for mobs
+  std::vector<Monster>::iterator mob;
+  for(mob = this->mobs.begin(); mob < this->mobs.end(); mob++) {
+    if(x == mob->x and y == mob->y) {
+      blocked = true;
+    }
+  }
+  if(blocked) return false;
+  else return true;
+}
+
+bool Map::noMob(int y, int x, int atk) {
+  std::vector<Monster>::iterator mob;
+  bool blocked = false;
+  for(mob = this->mobs.begin(); mob < this->mobs.end(); mob++) {
+    // if monster is in path
+    if(x == mob->x and y == mob->y) {
+      // set blocked
+      blocked = true;
+    }
+  }
+  if(blocked) return false;
+  else return true;
 }

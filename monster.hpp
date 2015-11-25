@@ -13,6 +13,7 @@ class Monster {
     int color;
   public:
     int x, y;
+    int hp = 5;
     Monster(std::string name, char glyph, int color);
     ~Monster();
     void draw(Screen &scr);

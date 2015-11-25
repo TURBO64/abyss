@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-void moveMobs(Map *currentmap, Player &p);
+void moveMobs(Map *currentmap, Player &player);
 void movePlayer(int dy, int dx, Player &player, Map *currentmap);
 
 int main() {
@@ -43,8 +43,7 @@ int main() {
   World world;
 
   // create currentmap pointer
-  Map * currentmap;
-  currentmap = &world.worldArray[player.worldY][player.worldX];
+  Map * currentmap = &world.worldArray[player.worldY][player.worldX];
 
   // init screen
   Screen scr;
@@ -105,28 +104,28 @@ int main() {
     // key bindings
     switch(input) {
       // movement
-      case 'h': // left
+      case KEY_B1: case KEY_LEFT: case 'h': // left
         movePlayer(0, -1, player, currentmap);
         break;
-      case 'j': // down
+      case KEY_C2: case KEY_DOWN: case 'j': // down
         movePlayer(1, 0, player, currentmap);
         break;
-      case 'k': // up
+      case KEY_A2: case KEY_UP: case 'k': // up
         movePlayer(-1, 0, player, currentmap);
         break;
-      case 'l': // right
+      case KEY_B3: case KEY_RIGHT: case 'l': // right
         movePlayer(0, 1, player, currentmap);
         break;
-      case 'y': // up-left
+      case KEY_A1: case 'y': // up-left
         movePlayer(-1, -1, player, currentmap);
         break;
-      case 'u': // up-right
+      case KEY_A3: case 'u': // up-right
         movePlayer(-1, 1, player, currentmap);
         break;
-      case 'b': // down-left
+      case KEY_C1: case 'b': // down-left
         movePlayer(1, -1, player, currentmap);
         break;
-      case 'n': // down-right
+      case KEY_C3: case 'n': // down-right
         movePlayer(1, 1, player, currentmap);
         break;
 
@@ -199,27 +198,6 @@ void movePlayer(int dy, int dx, Player &player, Map *currentmap) {
   int newx = player.x + dx;
   int newy = player.y + dy;
 
-  // move east in world
-  if(newx == MAP_WIDTH) {
-    player.worldX++;
-    player.x = 0;
-  }
-  // move west in world
-  if(newx == -1) {
-    player.worldX--;
-    player.x = MAP_WIDTH - 1;
-  }
-  // move north in world
-  if(newy == -1) {
-    player.worldY--;
-    player.y = MAP_HEIGHT - 1;
-  }
-  // move south in world
-  if(newy == MAP_HEIGHT) {
-    player.worldY++;
-    player.y = 0;
-  }
-
   // collision detection/combat
   bool blocked = false;
 
@@ -251,5 +229,25 @@ void movePlayer(int dy, int dx, Player &player, Map *currentmap) {
   if(!blocked) {
     player.y = newy;
     player.x = newx;
+  }
+  // move east in world
+  if(newx == MAP_WIDTH) {
+    player.worldX++;
+    player.x = 0;
+  }
+  // move west in world
+  if(newx == -1) {
+    player.worldX--;
+    player.x = MAP_WIDTH - 1;
+  }
+  // move north in world
+  if(newy == -1) {
+    player.worldY--;
+    player.y = MAP_HEIGHT - 1;
+  }
+  // move south in world
+  if(newy == MAP_HEIGHT) {
+    player.worldY++;
+    player.y = 0;
   }
 }
